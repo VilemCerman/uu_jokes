@@ -26,6 +26,9 @@ const WARNINGS = {
   },
   updateUnsupportedKeys: {
     code: `${Errors.Update.UC_CODE}unsupportedKeys`
+  },
+  deleteUnsupportedKeys: {
+    code: `${Errors.Delete.UC_CODE}unsupportedKeys`
   }
 };
 
@@ -189,9 +192,73 @@ class JokeAbl {
         EXECUTIVES_PROFILE));
   }
   async _updateJoke(awid, dtoIn, uuAppErrorMap) {
-      return await this.dao.findOneAndUpdate(dtoIn);
+    return await this.dao.findOneAndUpdate(dtoIn);
   }
-
+  async delete(awid, dtoIn, session, authorizationResult) {
+    // HDS 2. Performs a logical check of dtoIn.
+    let validationResult = this.validator.validate("jokeDeleteDtoInType",
+      dtoIn);
+    // hds 2.2, 2.3
+    let uuAppErrorMap = ValidationHelper.processValidationResult(dtoIn,
+      validationResult,
+      WARNINGS.deleteUnsupportedKeys.code,
+      Errors.Delete.InvalidDtoIn);
+    // 3. Gets Joke object according to dtoIn.id (by joke DAO get). (A5)
+    let loadedJoke = await this._getJoke(awid, dtoIn.id, uuAppErrorMap);
+    // 4. Validates users authorization to update the joke, e.g. user is in Authorities profile or uuIdentity of logged user is the same as joke.uuIdentity. (A6)
+    // if (this._isUserAuthorizedForAction(loadedJoke.uuIdentity, session,
+    //   authorizationResult)) {
+    //   throw new Errors.Delete.UserNotAuthorized(uuAppErrorMap);
+    // }
+    // 5. Deletes all jokeRating uuObjects from the uuAppObjectStore that contain a given Id of the joke (through the jokeRating DAO deleteByJoke).
+    // 6. In case the joke.image is filled in the object loaded in HDS 3, then calls the uuAppBinaryStore library method deleteBinary and so deletes the image with the given id from the uuAppBinaryStore. (A7)
+    // 7. Deletes the joke uuObject from the uuAppObjectStore with a given Id (through the joke DAO delete).
+    await this._deleteJoke(awid, dtoIn, uuAppErrorMap);
+    // if (loadedJoke.image){
+    //   await this._deleteJokeImage(awid, loadedJoke, uuAppErrorMap);
+    // }
+    // 8. Returns properly filled out dtoOut.
+    return {status : 200, uuAppErrorMap: uuAppErrorMap};
+  }
+  async _deleteJoke(awid, dtoIn, uuAppErrorMap) {
+    try {
+      await this.dao.delete(awid, dtoIn.id);
+    } catch (e) {
+      if (e instanceof ObjectStoreError) {
+        throw new Errors.Delete.JokeDoesNotExist({uuAppErrorMap}, e);
+      }
+      throw e;
+    }
+  }
+  async _deleteJokeImage(awid, loadedJoke, uuAppErrorMap) {
+    try {
+      await this.jokeImageDao.deleteByCode(awid, loadedJoke.image);
+    } catch (e) {
+      if (e instanceof ObjectStoreError) {
+        throw new Errors.Delete.JokeDoesNotExist({uuAppErrorMap}, e);
+      }
+      throw e;
+    }
+  }
+  // async _getJoke(awid, id, uuAppErrorMap) {
+  //   let loadedJoke;
+  //   try {
+  //     loadedJoke = await this.dao.get(awid, id);
+  //   } catch (e) {
+  //     // AS 2.1. - Throw exchangeRateDaoGetFailed exception, which writes the error
+  //     // in dtoOut.uuAppErrorMap, and terminate.
+  //     if (e instanceof BinaryStoreError) {
+  //       throw new Errors.Delete.UuBinaryDeleteFailed({uuAppErrorMap}, e);
+  //     }
+  //     throw e;
+  //   }
+  //   if (!loadedJoke) {
+  //     // AS 2.2. - Throw exchangeRateNotFound exception, which writes the error
+  //     // in dtoOut.uuAppErrorMap, and terminate.
+  //     throw new Errors.Delete.JokeDoesNotExist({uuAppErrorMap}, {jokeId: id});
+  //   }
+  //   return loadedJoke;
+  // }
 }
 
 module.exports = new JokeAbl();
