@@ -48,8 +48,24 @@ class CategoryAbl {
       Errors.Create.InvalidDtoIn
     );
 
-    dtoIn.awid = awid;
-    const category = await this.dao.create(dtoIn);
+    const categoryList = await this.list(awid, {"sortBy": "name", "order":"asc", "pageInfo": {"pageSize": 1024, "pageIndex": DEFAUL_VALUES.pageIndex}});
+    let exists = false;
+    let category;
+
+    categoryList.itemList.forEach((listedCategory) => {
+      console.log(listedCategory);
+      if(listedCategory.name === dtoIn.name){
+        console.log("break");
+        category = listedCategory;
+        exists = true;
+        //return { ...listedCategory, uuAppErrorMap};
+      }
+    })
+
+    if(category === undefined){
+      dtoIn.awid = awid;
+      category = await this.dao.create(dtoIn);
+    }
     const dtoOut = { ...category, uuAppErrorMap };
     return dtoOut;
   }
