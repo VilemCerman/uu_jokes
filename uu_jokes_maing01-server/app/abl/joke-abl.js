@@ -2,6 +2,7 @@
 const { Validator } = require("uu_appg01_server").Validation;
 const { ValidationHelper } = require("uu_appg01_server").AppServer;
 const { DaoFactory } = require("uu_appg01_server").ObjectStore;
+const CategoryAbl = require("./category-abl");
 
 const Errors = require("../api/errors/joke-error.js");
 const Warnings = require("../api/warnings/joke-warning.js");
@@ -57,6 +58,9 @@ class JokeAbl {
         throw new Errors.Create.TextContainsFishyWords({ uuAppErrorMap }, { text: dtoIn.text, fishyWord: word });
       }
     });
+
+    //save category
+    CategoryAbl.create(awid, {"name" : dtoIn.categoryName})
 
     // save joke to uuObjectStore
     dtoIn.awid = awid;
