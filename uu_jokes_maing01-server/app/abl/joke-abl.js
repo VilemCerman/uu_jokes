@@ -104,11 +104,8 @@ class JokeAbl {
     let uuAppErrorMap = ValidationHelper.processValidationResult(dtoIn,
       validationResult,
       WARNINGS.getUnsupportedKeys.code, Errors.Get.InvalidDtoIn);
-    // hds 2
-    // hds 3
     let dtoOut = await this._getJoke(awid, dtoIn.id, uuAppErrorMap)
     dtoOut.uuAppErrorMap = uuAppErrorMap;
-    // hds 4
     return dtoOut;
   }
   async _getJoke(awid, id, uuAppErrorMap) {
@@ -116,17 +113,12 @@ class JokeAbl {
     try {
       loadedJoke = await this.dao.get(awid, id);
     } catch (e) {
-      // AS 2.1. - Throw exchangeRateDaoGetFailed exception, which writes the error
-      // in dtoOut.uuAppErrorMap, and terminate.
       if (e instanceof ObjectStoreError) {
         throw new Errors.Get.JokeDaoUpdateFailed({uuAppErrorMap}, e);
       }
       throw e;
     }
     if (!loadedJoke) {
-      // AS 2.2. - Throw exchangeRateNotFound exception, which writes the error
-      // in dtoOut.uuAppErrorMap, and terminate.
-      //throw new Errors.Get.JokeDoesNotExist({uuAppErrorMap}, {jokeId: id});
       return [];
     }
     return loadedJoke;
@@ -168,30 +160,6 @@ class JokeAbl {
     // 8. Returns properly filled out dtoOut.
     return {joke: updated, uuAppErrorMap: uuAppErrorMap}
   }
-  // async _getJoke(awid, id, uuAppErrorMap) {
-  //   let loadedJoke;
-  //   try {
-  //     loadedJoke = await this.jokeDao.get(awid, id);
-  //   } catch (e) {
-  //     // AS 2.1. - Throw exchangeRateDaoGetFailed exception, which writes the error
-  //     // in dtoOut.uuAppErrorMap, and terminate.
-  //     if (e instanceof ObjectStoreError) {
-  //       throw new Errors.Update.JokeDaoUpdateFailed({uuAppErrorMap}, e);
-  //     }
-  //     throw e;
-  //   }
-  //   if (!loadedJoke) {
-  //     // AS 2.2. - Throw exchangeRateNotFound exception, which writes the error
-  //     // in dtoOut.uuAppErrorMap, and terminate.
-  //     throw new Errors.Update.JokeDoesNotExist({uuAppErrorMap}, {jokeId: id});
-  //   }
-  //   return loadedJoke;
-  // }
-  _isUserAuthorizedForAction(uuIdentity, session, authorizationResult) {
-    return !(uuIdentity === session.getIdentity().getUuIdentity()
-      || authorizationResult.getAuthorizedProfiles().includes(
-        EXECUTIVES_PROFILE));
-  }
   async _updateJoke(awid, dtoIn, uuAppErrorMap) {
     return await this.dao.findOneAndUpdate(dtoIn);
   }
@@ -231,35 +199,6 @@ class JokeAbl {
       throw e;
     }
   }
-  async _deleteJokeImage(awid, loadedJoke, uuAppErrorMap) {
-    try {
-      await this.jokeImageDao.deleteByCode(awid, loadedJoke.image);
-    } catch (e) {
-      if (e instanceof ObjectStoreError) {
-        throw new Errors.Delete.JokeDoesNotExist({uuAppErrorMap}, e);
-      }
-      throw e;
-    }
-  }
-  // async _getJoke(awid, id, uuAppErrorMap) {
-  //   let loadedJoke;
-  //   try {
-  //     loadedJoke = await this.dao.get(awid, id);
-  //   } catch (e) {
-  //     // AS 2.1. - Throw exchangeRateDaoGetFailed exception, which writes the error
-  //     // in dtoOut.uuAppErrorMap, and terminate.
-  //     if (e instanceof BinaryStoreError) {
-  //       throw new Errors.Delete.UuBinaryDeleteFailed({uuAppErrorMap}, e);
-  //     }
-  //     throw e;
-  //   }
-  //   if (!loadedJoke) {
-  //     // AS 2.2. - Throw exchangeRateNotFound exception, which writes the error
-  //     // in dtoOut.uuAppErrorMap, and terminate.
-  //     throw new Errors.Delete.JokeDoesNotExist({uuAppErrorMap}, {jokeId: id});
-  //   }
-  //   return loadedJoke;
-  // }
 }
 
 module.exports = new JokeAbl();
