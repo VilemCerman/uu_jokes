@@ -126,7 +126,8 @@ class JokeAbl {
     if (!loadedJoke) {
       // AS 2.2. - Throw exchangeRateNotFound exception, which writes the error
       // in dtoOut.uuAppErrorMap, and terminate.
-      throw new Errors.Get.JokeDoesNotExist({uuAppErrorMap}, {jokeId: id});
+      //throw new Errors.Get.JokeDoesNotExist({uuAppErrorMap}, {jokeId: id});
+      return [];
     }
     return loadedJoke;
   }
