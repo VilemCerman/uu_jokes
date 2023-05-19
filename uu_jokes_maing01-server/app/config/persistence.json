@@ -11,8 +11,9 @@
           "realization": "dao/JokeMongo",
           "maxNoi": 1024
         },
-        "jokesInstance": {
-          "realization": "dao/JokesInstanceMongo"
+        "category" : {
+          "realization": "dao/CategoryMongo",
+          "maxNoi": 1024
         }
       }
     }
