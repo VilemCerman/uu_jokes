@@ -3,7 +3,7 @@
 const jokeCreateDtoInType = shape({
   name: string(3, 255).isRequired(),
   text: string(3, 4000).isRequired(),
-  categoryId: id().isRequired()
+  categoryName: string(2, 255).isRequired()
 });
 
 const jokeGetDtoInType = shape({
@@ -27,5 +27,5 @@ const jokeUpdateDtoInType = shape({
   id: id().isRequired(),
   name: uu5String(255),
   text: uu5String(4000),
-  categoryId: id()
+  categoryName: uu5String(255)
 })
