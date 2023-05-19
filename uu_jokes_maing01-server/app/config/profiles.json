@@ -52,6 +52,26 @@
       "joke/delete": {
         "sysStateList": ["active"],
         "profileList": ["Public"]
+      },
+      "category/create": {
+        "sysStateList": ["active"],
+        "profileList": ["Public"]
+      },
+      "category/list": {
+        "sysStateList": ["active"],
+        "profileList": ["Public"]
+      },
+      "category/get": {
+        "sysStateList": ["active"],
+        "profileList": ["Public"]
+      },
+      "category/update": {
+        "sysStateList": ["active"],
+        "profileList": ["Public"]
+      },
+      "category/delete": {
+        "sysStateList": ["active"],
+        "profileList": ["Public"]
       }
     }
   }
