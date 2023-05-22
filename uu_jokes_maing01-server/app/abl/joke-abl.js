@@ -128,40 +128,14 @@ class JokeAbl {
     return loadedJoke;
   }
   async update(awid, dtoIn, session, authorizationResult) {
-    // 2. Performs a logical check of dtoIn.
-    let validationResult = this.validator.validate("jokeUpdateDtoInType",
-      dtoIn);
-    // hds 1.2, 1.3 // A1, A2
+    let validationResult = this.validator.validate("jokeUpdateDtoInType", dtoIn);
     let uuAppErrorMap = ValidationHelper.processValidationResult(dtoIn,
       validationResult,
       WARNINGS.updateUnsupportedKeys.code, Errors.Update.InvalidDtoIn);
-    // 3. Loads the Joke uuObject according to dtoIn.id (by joke DAO get). (A5)
     let loadedJoke = await this._getJoke(awid, dtoIn.id, uuAppErrorMap);
-    // 4. Validates users authorization to update the joke, e.g. user is in Authorities profile or uuIdentity of logged user is the same as joke.uuIdentity. (A6)
-
-    // if (this._isUserAuthorizedForAction(loadedJoke.uuIdentity, session,
-    //   authorizationResult)) {
-    //   throw new Errors.Update.UserNotAuthorized({uuAppErrorMap})
-    // }
-
-    // 5. For all categories in categoryIdList in dtoIn verifies the existence of the category by Id (category DAO listByCategoryIdList). (A7)
-    // 6. If the dtoIn contains key image, finds the value of joke.image from uuObject joke loaded in HDS 3.
-    if (dtoIn.image) {
-      //6.1. If it is null, calls the createBinary method from the uuAppBinaryStore library with attributes - data: dtoIn.image. (A8)
-      if (!loadedJoke.image) {
-        dtoIn = await this._saveImageData(awid, dtoIn)
-        loadedJoke.image = dtoIn.image;
-        //6.2. If it is not null, calls the updateBinaryData method from the uuAppBinaryStore library with attributes - data: dtoIn.image, code: "joke.image" and revisionStrategy: "NONE". (A9)
-      } else {
-        await this._updateJokeImage(awid, loadedJoke.image ,dtoIn, uuAppErrorMap)
-      }
-    }
-    // 7. Checked dtoIn is saved to the uuAppObjectStore (through joke DAO update). (A10)
     loadedJoke.name = dtoIn.name;
     loadedJoke.text = dtoIn.text
-
     let updated = await this._updateJoke(awid, loadedJoke, uuAppErrorMap)
-    // 8. Returns properly filled out dtoOut.
     return {joke: updated, uuAppErrorMap: uuAppErrorMap}
   }
   async _updateJoke(awid, dtoIn, uuAppErrorMap) {
