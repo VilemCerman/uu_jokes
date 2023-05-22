@@ -53,9 +53,7 @@ class CategoryAbl {
     let category;
 
     categoryList.itemList.forEach((listedCategory) => {
-      console.log(listedCategory);
       if(listedCategory.name === dtoIn.name){
-        console.log("break");
         category = listedCategory;
         exists = true;
         //return { ...listedCategory, uuAppErrorMap};
