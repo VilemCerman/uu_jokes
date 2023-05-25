@@ -1,67 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="google" content="notranslate" />
-    <title>uuJokes</title>
-
-    <!-- NOTE Following URLs are automatically replaced during build according to the configuration.
-      Additionally, <base> element is automatically inserted here so that relative paths are loaded relatively to app base,
-      not relatively to current use case in the URL. -->
-    <% template = `
-    <script src="uu5-environment.js"></script>
-    <script src="~uu5g05-browser-compatibility/uu5g05-browser-compatibility.min.js" crossorigin="anonymous"></script>
-
-    <link type="text/css" rel="stylesheet" href="~uu_gdsg01-unicorn/assets/font.min.css">
-    <link type="text/css" rel="stylesheet" href="loading.css">
-    <link rel="preconnect" href="https://uuidentity.plus4u.net">
-    <script src="~uu5loaderg01" crossorigin="anonymous"></script>
-
-    <meta name="apple-mobile-web-app-title" content="uuJokes">
-    <meta name="application-name" content="uuJokes">
-    <meta name="msapplication-TileImage" content="assets/meta/mstile-150x150.png">
-    <meta name="msapplication-TileColor" content="#004191">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/meta/apple-touch-icon.png">
-    <link rel="icon" type="image/png" href="assets/meta/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="assets/meta/favicon-16x16.png" sizes="16x16">
-    <link rel="mask-icon" href="assets/meta/safari-pinned-tab.svg" color="#004191">
-
-    <!-- Add extra <link>s or <script>s here if necessary. -->
-
-    ` %><%= htmlWebpackPlugin.options.ejsFixUrls(template) %>
-  </head>
-
-  <body class="uu-gdsg01-unicorn">
-
-    <div id="uuApp">
-      <div id="uuAppLoading">
-        <%=
-          // add loading indication and apply uuApp visual settings from uu5Environment["uu_plus4u5g02_uuApp"] (env/production.json)
-          // https://uuapp.plus4u.net/uu-bookkit-maing01/83c1406c4fc541dba975941424106318/book/page?code=67000055
-          htmlWebpackPlugin.options.renderTemplate("index-loading.html")
-        %>
-      </div>
+<head>
+    <meta charset="UTF-8">
+    <title>Jokes</title>
+    <link rel="stylesheet" href="public/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"></head>
+<body>
+    <button id="jokes-btn" class="btn btn-info">Jokes</button> /
+    <button id="categories-btn" class="btn btn-secondary">Categories</button>
+    <div id="dynamic-content">
     </div>
-
-<%=
-  // insert error snippet if application initialization fails entirely
-  htmlWebpackPlugin.options.renderTemplate("index-error.html", {
-    handlerName: "handleUuAppScriptError",
-    targetElementId: "uuApp"
-  })
-%>
-
-    <script>
-      if (!window.Uu5Loader) handleUuAppScriptError(new Error("Uu5Loader failed to load."));
-      else Uu5Loader.import("./index.js").then(function (Index) {
-        Index.render("uuApp");
-      }).catch(handleUuAppScriptError);
-    </script>
-
-<%=
-  // insert <noscript> snippet for users with turned off JavaScript
-  htmlWebpackPlugin.options.renderTemplate("index-noscript.html")
-%>
-  </body>
+    <script type="text/javascript" src="public/script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
 </html>
