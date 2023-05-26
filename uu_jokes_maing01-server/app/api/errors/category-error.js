@@ -99,6 +99,13 @@ const Delete = {
       this.message = "DtoIn is not valid.";
     }
   },
+  CategoryContainsJokes: class extends UuCategoryError {
+    constructor() {
+      super(...arguments);
+      this.code = `${Delete.UC_CODE}categoryContainsJokes`;
+      this.message = "Category contains jokes.";
+    }
+  },
   UserNotAuthorized: class extends UuCategoryError {
     constructor() {
       super(...arguments);
