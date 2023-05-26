@@ -34,7 +34,7 @@ class DataLoader {
         this.Joke(jokeName.id);
       });
     });
-    addJokeBtn.addEventListener('click', (button) => {
+    addJokeBtn.addEventListener("click", (button) => {
       this.CreateJokeForm();
     });
   };
