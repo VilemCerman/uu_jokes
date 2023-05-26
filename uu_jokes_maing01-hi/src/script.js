@@ -156,7 +156,12 @@ class DataLoader {
       "        </tr>" +
       "      </thead>";
     data.itemList.forEach((category) => {
-      newHtml += `<tr class="category-row"><td id="${category.id}" class="category-name">${category.name}</td></tr>`;
+      newHtml += `
+        <tr class="category-row">
+          <td id="${category.id}" class="category-name">
+            <button type="button" class="btn btn-link">${category.name}</button>
+          </td>
+        </tr>`;
     });
     newHtml += "</table>";
     this.DynamicContent.innerHTML = newHtml;
