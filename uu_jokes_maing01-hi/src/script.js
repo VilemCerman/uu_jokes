@@ -165,10 +165,29 @@ class DataLoader {
     });
     newHtml += "</table>";
     this.DynamicContent.innerHTML = newHtml;
-    // const categoryNames = this.DynamicContent.querySelectorAll(".category-name");
-    // categoryNames.forEach(categoryName => {
-    //   jokeName.addEventListener('click', button =>{this.Category(categoryName.id)})
-    // });
+    const categoryNames = this.DynamicContent.querySelectorAll(".category-name");
+    categoryNames.forEach((categoryName) => {
+      categoryName.addEventListener("click", (button) => {
+        this.Category(categoryName.id);
+      });
+    });
+  };
+  Category = async (id) => {
+    const data = { id: id };
+    const category = await this._sendRequest(this._url + "category/get", data);
+
+    this.DynamicContent.innerHTML = `
+        <h3>${category.name}</h3>
+        <button id="category-delete-btn" type="button" class="btn btn-outline-danger" value="${category.id}">Smazat</button>`;
+    const deleteBtn = document.querySelector("#category-delete-btn");
+    deleteBtn.addEventListener("click", (button) => {
+      this.DeleteCategory(deleteBtn.value);
+    });
+  };
+  DeleteCategory = async (id) => {
+    const data = { id: id };
+    const res = await this._sendRequest(this._url + "category/delete", data);
+    await this.ListCategories();
   };
   _sendRequest = async (url, data = undefined) => {
     let res;
